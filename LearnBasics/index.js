@@ -43,7 +43,7 @@ const showMenu = () => {
 };
 
 const getMyTasks = () => {
-  const tasks = fs.readFileSync(todoFile, "utf-8");
+  const tasks = readFileSync(todoFile, "utf-8");
   // console.log(tasks)
   return JSON.parse(tasks);
 };
@@ -54,64 +54,62 @@ const saveMyTasks = (tasks) => {
 };
 
 const deleteTodo = (id) => {
-    // 
-    let todoArr = getMyTasks();
+  //
+  let todoArr = getMyTasks();
 
-    let index = parseInt(id);
-    // console.log(isNaN(index));
+  let index = parseInt(id);
+  // console.log(isNaN(index));
 
-    if(id > todoArr.length - 1 || isNaN(index)){
-        console.log("Try again unvalid input");
-        return;
-    }
+  if (id > todoArr.length - 1 || isNaN(index)) {
+    console.log("Try again unvalid input");
+    return;
+  }
 
+  todoArr = todoArr.filter((_, idx) => idx + 1 != id);
+  saveMyTasks(todoArr);
 
-    todoArr = todoArr.filter((_, idx) => idx + 1 != id)
-    saveMyTasks(todoArr)
-
-    console.log("Deleted Successfully")
+  console.log("Deleted Successfully");
 };
 
 const ShowTodo = () => {
-    console.log("\nTodos Are ---->")
+  console.log("\nTodos Are ---->");
   const todoArr = getMyTasks();
   for (let i = 0; i < todoArr.length; i++) {
-    console.log(`${i+1} ` + " " + todoArr[i]);
+    console.log(`${i + 1} ` + " " + todoArr[i]);
   }
-}
+};
 
 const addTask = (task) => {
   // console.log(task)
   const todoArr = getMyTasks();
-//   let obj = {
-//     id: idGenerator(),
-//     task,
-//   };
+  //   let obj = {
+  //     id: idGenerator(),
+  //     task,
+  //   };
 
   todoArr.push(task);
   saveMyTasks(todoArr);
 };
 
-
 const updateTodo = (updatedTask, id) => {
-    console.log(updatedTask, id);
-    let todoArr = getMyTasks();
+  console.log(updatedTask, id);
+  let todoArr = getMyTasks();
 
-    todoArr = todoArr.map((ele, idx) => {
-        if(idx + 1 == id){
-            return updatedTask
-        }else{
-            return ele
-        }
-    }) 
+  todoArr = todoArr.map((ele, idx) => {
+    if (idx + 1 == id) {
+      return updatedTask;
+    } else {
+      return ele;
+    }
+  });
 
-    saveMyTasks(todoArr);
+  saveMyTasks(todoArr);
 
-    console.log("Updated Successfully");
-    ShowTodo();
+  console.log("Updated Successfully");
+  ShowTodo();
 
-    todoManager();
-}
+  todoManager();
+};
 
 const todoManager = () => {
   showMenu();
@@ -125,31 +123,31 @@ const todoManager = () => {
         });
         break;
 
-      case "2": {
-        ShowTodo();
-        todoManager();
-      }
-      break;
+      case "2":
+        {
+          ShowTodo();
+          todoManager();
+        }
+        break;
 
       case "3":
         ShowTodo();
         rl.question("Which task You want to Delete: \n", (id) => {
-        deleteTodo(id)
+          deleteTodo(id);
           todoManager();
         });
         break;
 
-        case "4": {
-            ShowTodo();
-            rl.question("Which task You want to Update: \n", (id) => {
-                rl.question("Enter the update Task\n", (updatedTask) => {
-                    updateTodo(updatedTask, id)
-                })
-                });
-
-                
-          }
-          break;
+      case "4":
+        {
+          ShowTodo();
+          rl.question("Which task You want to Update: \n", (id) => {
+            rl.question("Enter the update Task\n", (updatedTask) => {
+              updateTodo(updatedTask, id);
+            });
+          });
+        }
+        break;
 
       case "Quit": {
         rl.close();
