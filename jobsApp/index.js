@@ -1,10 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const jobRoutes = require("./route/jobRoute");
+const dotenv = require("dotenv");
 
 const app = express();
 
-mongoose.connect("mongodb://localhost:27017/geekster")
+dotenv.config();
+
+mongoose.connect(process.env.DB_LINK)
 .then(() => {
     console.log("DB Connected")
 })
@@ -20,7 +23,7 @@ mongoose.connection.on('error', (err) => {
 
 app.use(express.json());
 app.use(jobRoutes);
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
