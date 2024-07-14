@@ -8,8 +8,27 @@ app.use(express.json());
 
 const PORT = 8080;
 
-app.post("/shorten", (req, res) => {
+const isUrlValid = (url) => {
+  try {
+    new URL(url);
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+
+app.post("/", (req, res) => {
   // console.log(req.body.longUrl)
+  const isValidUrl = isUrlValid(req.body.longUrl);
+  if (!isValidUrl) {
+    return res.status(400).json({
+      success: false,
+      message: "Please provide a valid longUrl",
+    });
+  }
+
+
   const shortUrl = nanoid(5);
   const urlFile = fs.readFileSync("urls.json", { encoding: "utf-8" });
   const urlJson = JSON.parse(urlFile || "{}");
@@ -28,6 +47,10 @@ app.get("/:shortLink", (req, res) => {
     const urlObj = fs.readFileSync("urls.json", { encoding: "utf-8" });
     const urlJson = JSON.parse(urlObj);
     const newUrl = urlJson[shortLink];
+
+    if (!newUrl) {
+      return res.end("Invalid Short Url");
+    }
 
     // console.log(urlJson[shortLink]);
     // res.status(200).json({

@@ -12,3 +12,23 @@ router.put("/api/jobs/:id", updateJob);
 router.delete("/api/jobs/:id", deletejob);
 
 module.exports = router;
+
+
+
+// {
+//     "title": "SDE",
+//     "description": "SDE description Job",
+//     "company": "SDE company",
+//     "location": "SDE location",
+//     "salary": "SDE salary",
+//   }
+
+
+
+// {
+//     "title": "SDE",
+//     "description": "SDE description Job",
+//     "company": "SDE company",
+//     "location": "SDE location",
+//     "salary": "1000"
+//   }

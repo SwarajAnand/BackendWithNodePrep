@@ -1,4 +1,4 @@
-const { Mongoose, default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 
 const jobSchema = new mongoose.Schema({
     title: {
@@ -17,3 +17,7 @@ const jobSchema = new mongoose.Schema({
         type: Number,
     },
 })
+
+const jobModel = mongoose.model("demo", jobSchema)
+
+module.exports = jobModel;

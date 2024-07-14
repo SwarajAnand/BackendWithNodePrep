@@ -18,7 +18,7 @@ mongoose.connection.on('error', (err) => {
     console.log('Mongoose connection error: ', err);
   });
 
-
+app.use(express.json());
 app.use(jobRoutes);
 const PORT = process.env.PORT || 5000;
 
