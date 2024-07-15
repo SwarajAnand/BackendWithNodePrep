@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>URL Shortener</title>
+  </head>
+  <body>
+    <form id="urlForm">
+      <input
+        type="text"
+        name="longUrl"
+        id="longUrl"
+        placeholder="Enter long URL"
+        required
+      />
+      <button type="submit">Shorten</button>
+    </form>
+    <div id="result"></div>
+    <div id="error" style="color: red;"></div>
+
+    <script>
+      document
+        .getElementById("urlForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          callApi();
+        });
+
+      const callApi = async () => {
+        const text = document.getElementById("longUrl").value;
+        document.getElementById("error").innerText = "";
+        document.getElementById("result").innerText = "";
+
+        try {
+          const res = await fetch("https://backendwithnodeprep.onrender.com/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ longUrl: text }),
+          });
+
+          if (!res.ok) {
+            throw new Error("Invalid URL");
+          }
+
+          const data = await res.json();
+          document.getElementById(
+            "result"
+          ).innerHTML = `<a href="${data.url}" target="_blank">${data.url}</a>`;
+        } catch (error) {
+          console.error("Error:", error);
+          document.getElementById("error").innerText = "Invalid URL";
+        }
+      };
+    </script>
+  </body>
+</html>
