@@ -1,7 +1,7 @@
 import express from "express";
 import { nanoid } from "nanoid";
 import fs from "fs";
-const cors = require("cors");
+import cors from 'cors';
 const PORT = 8080;
 
 const app = express();
