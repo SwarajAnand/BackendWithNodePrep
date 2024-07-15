@@ -21,7 +21,7 @@ module.exports = router;
 //     "description": "SDE description Job",
 //     "company": "SDE company",
 //     "location": "SDE location",
-//     "salary": "SDE salary",
+//     "salary": "SDE salary"
 //   }
 
 
