@@ -13,7 +13,7 @@ const createJob = (req, res) => {
 
 const listJob = async (req, res) => {
     const jobList = await jobModel.find({
-        salary: { $gt: 9000 }
+        // salary: { $gt: 9000 }
     })
     res.status(200).json({
         success: true,
