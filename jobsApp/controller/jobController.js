@@ -22,6 +22,7 @@ const listJob = async (req, res) => {
     });
 };
 
+
 // 6694039439f7d8ea48a8e04f
 
 const updateJob = async (req, res) => {
@@ -36,10 +37,12 @@ const updateJob = async (req, res) => {
 };
  
 
-const deletejob = (req, res) => {
+const deletejob = async (req, res) => {
+    const deleteId = req.params.id;
+    const deleteJob = await jobModel.findByIdAndDelete(deleteId);
     res.status(200).json({
         success: true,
-        message: "deletejob API created"
+        message: `${deleteId} -> ID deleted`
     });
 };
 
