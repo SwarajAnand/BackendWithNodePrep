@@ -30,6 +30,7 @@ const login = async (req, res) => {
     userId : user._id,
     role : user.role,
     mobileNo : user.mobile,
+    expiresIn : "1d"
   }
 
   const token = jwt.sign( jwtPayload, "secret");
