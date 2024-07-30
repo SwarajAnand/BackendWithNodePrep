@@ -52,9 +52,12 @@ const login = async (req, res) => {
     return res.status(401).json(new ApiError(401, "Wrong Password"));
   }
 
+  // console.log(user);
+
   const jwtPayload = {
     userId: user._id,
-    mobileNo: user.mobile,
+    userName: user.userName,
+    avatar: user.avatar,
   };
 
   const token = jwt.sign(jwtPayload, process.env.SECRET_TOKEN_KEY, {
@@ -62,7 +65,7 @@ const login = async (req, res) => {
   });
   await userModule.findByIdAndUpdate(user._id, { $set: { token: token } });
 
-  req.userDetail = user;
+  // req.userDetail = user;
 
   return res
     .status(200)
@@ -90,7 +93,7 @@ const logout = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const logOutUser = await userModule.findByIdAndUpdate(req.user.userId, {
-    $set: { mobile: 565555545, email: "sdsdsd" },
+    $set: { ...req.body },
   });
 
   return res.status(200).json({

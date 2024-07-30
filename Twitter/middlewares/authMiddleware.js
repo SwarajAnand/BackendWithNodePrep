@@ -11,9 +11,6 @@ const authMiddleware = async (req, res, next) => {
 
     const userToken = authHeader.split(" ")[1];
     const data = await jwt.verify(userToken, process.env.SECRET_TOKEN_KEY);
-
-    // console.log(data);
-
     req.user = data;
 
     next();
