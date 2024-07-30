@@ -2,18 +2,21 @@ const userRoutes = require("express").Router();
 const { createpost, getPosts, getAllPost, removePost } = require("../controllers/postController.js");
 const { signup, login, logout, updateUser} = require("../controllers/userController.js");
 const authMiddleware = require("../middlewares/AuthMiddleware.js");
+const upload = require("../middlewares/uploadFile.js");
 
 userRoutes.post("/signup", signup);
 userRoutes.post("/login", login);
 userRoutes.post("/update", authMiddleware, updateUser);
-userRoutes.post("/logout", authMiddleware, logout);
+userRoutes.get("/logout", authMiddleware, logout);
 
-userRoutes.post("/createpost", authMiddleware, createpost);
-userRoutes.get("/profilePosts", authMiddleware, getPosts);
+userRoutes.post("/createpost", authMiddleware,  upload.single("image"), createpost);
+userRoutes.get("/profilePosts", getPosts);
 userRoutes.get("/allPosts", getAllPost);
 userRoutes.post("/removePost", authMiddleware, removePost);
 
 module.exports = userRoutes;
+
+
 
 // signup 
     // {

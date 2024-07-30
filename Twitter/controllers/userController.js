@@ -39,74 +39,118 @@ const signup = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const user = await userModule.findOne({ email: req.body.email });
-
-  if (!user) {
-    return res.status(404).json(new ApiError(404, "User not found"));
-  }
-
-  const { password } = req.body;
-  const isPasswordValid = await user.isPasswordCorrect(password);
-
-  if (!isPasswordValid) {
-    return res.status(401).json(new ApiError(401, "Wrong Password"));
-  }
-
-  // console.log(user);
-
-  const jwtPayload = {
-    userId: user._id,
-    userName: user.userName,
-    avatar: user.avatar,
-  };
-
-  const token = jwt.sign(jwtPayload, process.env.SECRET_TOKEN_KEY, {
-    expiresIn: "1d",
-  });
-  await userModule.findByIdAndUpdate(user._id, { $set: { token: token } });
-
-  // req.userDetail = user;
-
-  return res
-    .status(200)
-    .cookie("Authorization", `Bearer ${token}`, {
-      httpOnly: true,
-      secure: true,
-    })
-    .json({
-      success: true,
-      message: "Login successfully",
-      token: `Bearer ${token}`,
+  try {
+    const user = await userModule.findOne({ email: req.body.email });
+  
+    if (!user) {
+      return res.status(404).json(new ApiError(404, "User not found"));
+    }
+  
+    const { password } = req.body;
+    const isPasswordValid = await user.isPasswordCorrect(password);
+  
+    if (!isPasswordValid) {
+      return res.status(401).json(new ApiError(401, "Wrong Password"));
+    }
+  
+    const jwtPayload = {
+      userId: user._id,
+      userName: user.userName,
+      avatar: user.avatar,
+    };
+  
+    const token = jwt.sign(jwtPayload, process.env.SECRET_TOKEN_KEY, {
+      expiresIn: "1d",
     });
+    await userModule.findByIdAndUpdate(user._id, { $set: { token: token } });
+  
+    return res
+      .status(200)
+      .cookie("Authorization", `Bearer ${token}`, {
+        httpOnly: true,
+        secure: true,
+      })
+      .json({
+        success: true,
+        message: "Login successfully",
+        token: `Bearer ${token}`,
+      });
+  } catch (error) {
+    return res
+    .status(501)
+    .json(
+      new ApiError(501, err.message || "User Login failed", [
+        ["Please Login again"],
+      ])
+    );
+  }
 };
 
 const logout = async (req, res) => {
-  const logOutUser = await userModule.findByIdAndUpdate(req.user.userId, {
-    $set: { token: null },
-  });
+  try {
+    const logOutUser = await userModule.findByIdAndUpdate(req.user.userId, {
+      $set: { token: null },
+    });
 
-  return res.status(200).json({
-    success: true,
-    message: `User Logout successfully`,
-  });
+    return res.status(200).json({
+      success: true,
+      message: `User Logout successfully`,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json(
+        new ApiError(500, err.message || "User Logout failed", [
+          ["Please try again cancelling your request"],
+        ])
+      );
+  }
 };
 
 const updateUser = async (req, res) => {
-  const logOutUser = await userModule.findByIdAndUpdate(req.user.userId, {
-    $set: { ...req.body },
-  });
+  try {
+    const user = await userModule.findById(req.user.userId);
 
-  return res.status(200).json({
-    success: true,
-    message: `User updated successfully`,
-  });
-}
+    if (!user) {
+      return res
+        .status(404)
+        .json(
+          new ApiError(500, err.message || "User not found", [
+            ["Error updating user"],
+          ])
+        );
+    }
+
+    let updateData = { ...req.body };
+
+    await userModule.findByIdAndUpdate(
+      req.user.userId,
+      {
+        $set: updateData,
+      },
+      { new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully",
+    });
+  } catch (err) {
+    return res
+      .status(500)
+      .json(
+        new ApiError(500, err.message || "Something went wrong", [
+          ["Error updating user"],
+        ])
+      );
+  }
+};
 
 const userController = {
   signup,
   login,
   logout,
-  updateUser
+  updateUser,
 };
 
 module.exports = userController;

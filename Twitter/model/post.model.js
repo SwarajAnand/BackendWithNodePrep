@@ -10,12 +10,10 @@ const postModel = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // userAvatar: {
-
-    // },
-    // createBy: {
-
-    // },
+    cloudId: {
+      type: String,
+      default: null,
+    },
     image: {
       type: String,
       default: null,
@@ -31,8 +29,5 @@ const postModel = new mongoose.Schema(
   }
 );
 
-// postModel.pre("save" , async function(next){
-
-// })
 
 module.exports = mongoose.model("Post", postModel);
