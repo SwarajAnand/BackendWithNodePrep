@@ -10,8 +10,8 @@ userRoutes.post("/update", authMiddleware, updateUser);
 userRoutes.get("/logout", authMiddleware, logout);
 
 userRoutes.post("/createpost", authMiddleware,  upload.single("image"), createpost);
-userRoutes.get("/profilePosts", getPosts);
-userRoutes.get("/allPosts", getAllPost);
+userRoutes.get("/profilePosts",authMiddleware, getPosts);
+userRoutes.get("/allPosts",authMiddleware, getAllPost);
 userRoutes.post("/removePost", authMiddleware, removePost);
 
 module.exports = userRoutes;
