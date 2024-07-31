@@ -7,12 +7,10 @@ const {
   dislikePost,
   commentPost,
 } = require("../controllers/postController.js");
-const authMiddleware = require("../middlewares/AuthMiddleware.js");
 const upload = require("../middlewares/uploadFile.js");
 
 postRoutes.post(
   "/createPost",
-  authMiddleware,
   upload.single("image"),
   createpost
 );
