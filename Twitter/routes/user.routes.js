@@ -8,7 +8,7 @@ const {
   followUser,
   unFollowUser
 } = require("../controllers/userController.js");
-const authMiddleware = require("../middlewares/AuthMiddleware.js");
+const authMiddleware = require("../middlewares/authMiddleware.js");
 
 userRoutes.post("/signup", signup);
 userRoutes.post("/login", login);
