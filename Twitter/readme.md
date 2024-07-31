@@ -1,6 +1,18 @@
 # Twitter Backend Clone ---------
 
-## Base Url -> /api/v1/users
+## All user Routes -> /api/v1/users
+userRoutes.post("/signup");
+userRoutes.post("/login");
+userRoutes.post("/update");
+userRoutes.get("/logout");
+userRoutes.get("/getProfile");
+
+## All posts Routes -> /api/v1/posts
+postRoutes.get("/allPosts");
+postRoutes.post("/removePost");
+postRoutes.post("/likePost");
+postRoutes.post("/unlikePost");
+postRoutes.post("/commentPost");
 
 http://localhost:8080/api/v1/users/
 

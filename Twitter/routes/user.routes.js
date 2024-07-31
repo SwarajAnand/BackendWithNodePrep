@@ -4,7 +4,9 @@ const {
   login,
   logout,
   updateUser,
-  getProfile
+  getProfile,
+  followUser,
+  unFollowUser
 } = require("../controllers/userController.js");
 const authMiddleware = require("../middlewares/AuthMiddleware.js");
 
@@ -13,6 +15,11 @@ userRoutes.post("/login", login);
 userRoutes.post("/update", authMiddleware, updateUser);
 userRoutes.get("/logout", authMiddleware, logout);
 userRoutes.get("/getProfile", authMiddleware, getProfile);
+
+userRoutes.get("/follow", authMiddleware, followUser);
+userRoutes.get("/unFollow", authMiddleware, unFollowUser);
+
+
 
 module.exports = userRoutes;
 
@@ -32,7 +39,7 @@ module.exports = userRoutes;
 //   "userName": "Alice Johnson",
 //   "email": "alice.johnson@example.com",
 //   "password": "qwerty123"
-// },
+// }
 
 // Curr
 // {
