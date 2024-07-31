@@ -1,5 +1,25 @@
 const mongoose = require("mongoose");
 
+const commentSchema = new mongoose.Schema(
+  {
+    text: {
+      type: String,
+      required: true,
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    commentedBy: {
+      type: String,
+    }
+  },
+  {
+    timestamps: true,
+  }
+);
+
 const postModel = new mongoose.Schema(
   {
     title: {
@@ -23,6 +43,17 @@ const postModel = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    comments: [commentSchema],
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    likeCount: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
@@ -30,4 +61,6 @@ const postModel = new mongoose.Schema(
 );
 
 
+
 module.exports = mongoose.model("Post", postModel);
+

@@ -146,11 +146,51 @@ const updateUser = async (req, res) => {
   }
 };
 
+const getProfile = async (req, res) => {
+  try {
+    const user = await userModule.findById(req.query?.id).populate({
+      path: "posts",
+      select: '-comments',
+    }).select("-password")
+
+    // const userProfile = await userModule
+    //   .findById(req.query?.id)
+    //   .select("-password -comments");
+
+    if (!user) {
+      return res
+        .status(404)
+        .json(new ApiError(404, "Something went wrong", ["User not found"]));
+    }
+
+    console.log(user);
+
+    res.json({
+      success: true,
+      message: "Current user posts",
+      data: {
+        user,
+        // userProfile: userProfile,
+      },
+    });
+  } catch (err) {
+    return res
+      .status(500)
+      .json(
+        new ApiError(500, err.message || "Something went wrong", [
+          "Error getting posts",
+        ])
+      );
+  }
+};
+
+
 const userController = {
   signup,
   login,
   logout,
   updateUser,
+  getProfile,
 };
 
 module.exports = userController;
