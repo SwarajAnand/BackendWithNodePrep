@@ -109,6 +109,14 @@ const logout = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
+
+    // const { password } = req.body;
+    // const isPasswordValid = await user.isPasswordCorrect(password);
+
+    // if (!isPasswordValid) {
+    //   return res.status(401).json(new ApiError(401, "Wrong Password"));
+    // }
+
     const user = await userModule.findById(req.user.userId);
 
     if (!user) {
@@ -263,79 +271,79 @@ const unFollowUser = async (req, res) => {
 
 
 
-const followUserOptimised = async (req, res) => {
-  // Start a DB Transaction
-  const session = await userModule.startSession();
-  session.startTransaction();
+// const followUserOptimised = async (req, res) => {
+//   // Start a DB Transaction
+//   const session = await userModule.startSession();
+//   session.startTransaction();
 
-  try {
-    const visitedUser = req?.query?.id;
-    const currUser = req.user.userId;
+//   try {
+//     const visitedUser = req?.query?.id;
+//     const currUser = req.user.userId;
 
-    if (visitedUser === currUser) {
-      await session.abortTransaction(); 
-      session.endSession(); 
-      return res
-        .status(400)
-        .json(
-          new ApiError(400, "You cannot follow yourself", [
-            "Error following user",
-          ])
-        );
-    }
+//     if (visitedUser === currUser) {
+//       await session.abortTransaction(); 
+//       session.endSession(); 
+//       return res
+//         .status(400)
+//         .json(
+//           new ApiError(400, "You cannot follow yourself", [
+//             "Error following user",
+//           ])
+//         );
+//     }
 
-    // Fetch both the current user and the visited user within the session
-    const [loggedInUser, targetUser] = await Promise.all([
-      userModule.findById(currUser).session(session),
-      userModule.findById(visitedUser).session(session),
-    ]);
+//     // Fetch both the current user and the visited user within the session
+//     const [loggedInUser, targetUser] = await Promise.all([
+//       userModule.findById(currUser).session(session),
+//       userModule.findById(visitedUser).session(session),
+//     ]);
 
-    if (!loggedInUser || !targetUser) {
-      await session.abortTransaction(); // Abort the transaction
-      session.endSession(); // End the session
-      return res
-        .status(404)
-        .json(new ApiError(404, "User not found", ["Error following user"]));
-    }
+//     if (!loggedInUser || !targetUser) {
+//       await session.abortTransaction(); // Abort the transaction
+//       session.endSession(); // End the session
+//       return res
+//         .status(404)
+//         .json(new ApiError(404, "User not found", ["Error following user"]));
+//     }
 
-    if (loggedInUser.following.includes(visitedUser)) {
-      await session.abortTransaction(); // Abort the transaction
-      session.endSession(); // End the session
-      return res
-        .status(400)
-        .json(
-          new ApiError(400, "You are already following this user", [
-            "Error following user",
-          ])
-        );
-    }
+//     if (loggedInUser.following.includes(visitedUser)) {
+//       await session.abortTransaction(); // Abort the transaction
+//       session.endSession(); // End the session
+//       return res
+//         .status(400)
+//         .json(
+//           new ApiError(400, "You are already following this user", [
+//             "Error following user",
+//           ])
+//         );
+//     }
 
-    // Update the following and followers lists within the session
-    loggedInUser.following.push(visitedUser);
-    targetUser.followers.push(currUser);
+//     // Update the following and followers lists within the session
+//     loggedInUser.following.push(visitedUser);
+//     targetUser.followers.push(currUser);
 
-    // Save the documents within the transaction session
-    await Promise.all([
-      loggedInUser.save({ session }),
-      targetUser.save({ session }),
-    ]);
+//     // Save the documents within the transaction session
+//     await Promise.all([
+//       loggedInUser.save({ session }),
+//       targetUser.save({ session }),
+//     ]);
 
-    await session.commitTransaction(); // Commit the transaction
-    session.endSession(); // End the session
+//     await session.commitTransaction(); // Commit the transaction
+//     session.endSession(); // End the session
 
-    res.json({ success: true, message: "User followed successfully" });
-  } catch (error) {
-    await session.abortTransaction(); // Abort the transaction in case of error
-    session.endSession(); // End the session
-    res
-      .status(500)
-      .json(
-        new ApiError(500, error.message || "Internal server error", [
-          "Error following user",
-        ])
-      );
-  }
-};
+//     res.json({ success: true, message: "User followed successfully" });
+//   } catch (error) {
+//     await session.abortTransaction(); // Abort the transaction in case of error
+//     session.endSession(); // End the session
+//     res
+//       .status(500)
+//       .json(
+//         new ApiError(500, error.message || "Internal server error", [
+//           "Error following user",
+//         ])
+//       );
+//   }
+// };
 
 const userController = {
   signup,
