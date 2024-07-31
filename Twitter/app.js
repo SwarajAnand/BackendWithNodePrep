@@ -4,7 +4,7 @@ const cors = require("cors");
 const rateLimit = require("express-rate-limit");
 const userRoutes = require("./routes/user.routes");
 const postRoutes = require("./routes/post.routes");
-const authMiddleware = require("./middlewares/AuthMiddleware");
+const authMiddleware = require("./middlewares/authMiddleware");
 
 const limiter = rateLimit({
 	windowMs: 1000, 
