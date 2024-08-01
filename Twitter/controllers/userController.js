@@ -75,6 +75,7 @@ const login = async (req, res) => {
         success: true,
         message: "Login successfully",
         token: `Bearer ${token}`,
+        userId: user._id,
       });
   } catch (error) {
     return res
