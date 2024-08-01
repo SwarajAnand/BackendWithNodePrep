@@ -1,6 +1,8 @@
 const userModule = require("../model/user.model");
 const jwt = require("jsonwebtoken");
 const ApiError = require("../utils/ApiError");
+const uploadOnCloudinary = require("../middlewares/cloudinary");
+const cloudinary = require("cloudinary").v2;
 
 const signup = async (req, res) => {
   console.log(req.body);
@@ -112,27 +114,29 @@ const logout = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-
-    // const { password } = req.body;
-    // const isPasswordValid = await user.isPasswordCorrect(password);
-
-    // if (!isPasswordValid) {
-    //   return res.status(401).json(new ApiError(401, "Wrong Password"));
-    // }
-
     const user = await userModule.findById(req.user.userId);
 
     if (!user) {
-      return res
-        .status(404)
-        .json(
-          new ApiError(500, err.message || "User not found", [
-            ["Error updating user"],
-          ])
-        );
+      return res.status(404).json(
+        new ApiError(500, "User not found", [
+          ["Error updating user"],
+        ])
+      );
     }
 
     let updateData = { ...req.body };
+
+    if (req.file) {
+      const uploadResponse = await uploadOnCloudinary(req.file.path);
+      if (uploadResponse) {
+        updateData.avatar = uploadResponse.secure_url;
+      } else {
+        return res.status(500).json({
+          success: false,
+          message: "Error uploading file to Cloud",
+        });
+      }
+    }
 
     await userModule.findByIdAndUpdate(
       req.user.userId,
@@ -147,13 +151,11 @@ const updateUser = async (req, res) => {
       message: "User updated successfully",
     });
   } catch (err) {
-    return res
-      .status(500)
-      .json(
-        new ApiError(500, err.message || "Something went wrong", [
-          ["Error updating user"],
-        ])
-      );
+    return res.status(500).json(
+      new ApiError(500, err.message || "Something went wrong", [
+        ["Error updating user"],
+      ])
+    );
   }
 };
 
