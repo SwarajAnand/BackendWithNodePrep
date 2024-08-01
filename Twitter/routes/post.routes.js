@@ -9,9 +9,10 @@ const {
 } = require("../controllers/postController.js");
 const upload = require("../middlewares/uploadFile.js");
 
+
 postRoutes.post(
   "/createPost",
-  upload.single("image"),
+  upload.single("avatar"),
   createpost
 );
 postRoutes.get("/allPosts", getAllPost);

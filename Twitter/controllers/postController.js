@@ -122,6 +122,7 @@ const removePost = async (req, res) => {
   }
 };
 
+
 const likePost = async (req, res) => {
   try {
     const { postId } = req.body;
