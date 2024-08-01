@@ -16,6 +16,12 @@ postRoutes.post("/commentPost");
 
 http://localhost:8080/api/v1/users/
 
+How follow and un-follow working  
+user 1 -> follower 0 following 1  
+user 2 -> follower 1 following 0  
+
+follow -> user 1 logged in and follow user 2  
+
 ### ROUTES ->
 
 /signup -> Public route -> basic need  

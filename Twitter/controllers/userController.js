@@ -68,7 +68,8 @@ const login = async (req, res) => {
       .status(200)
       .cookie("Authorization", `Bearer ${token}`, {
         httpOnly: true,
-        secure: true,
+        // secure: true, // only send cookie over https
+        sameSite: 'None',
       })
       .json({
         success: true,
