@@ -1,55 +1,187 @@
-# Twitter Backend Clone ---------
+# Twitter Backend Clone
 
-## All user Routes -> /api/v1/users
-userRoutes.post("/signup");
-userRoutes.post("/login");
-userRoutes.post("/update");
-userRoutes.get("/logout");
-userRoutes.get("/getProfile");
+A backend API for a Twitter-like social media application, built using Node.js, Express, MongoDB, and JWT for authentication.
 
-## All posts Routes -> /api/v1/posts
-postRoutes.get("/allPosts");
-postRoutes.post("/removePost");
-postRoutes.post("/likePost");
-postRoutes.post("/unlikePost");
-postRoutes.post("/commentPost");
+## Table of Contents
 
-http://localhost:8080/api/v1/users/
+1. [Project Description](#project-description)
+2. [Features](#features)
+3. [Setup and Installation](#setup-and-installation)
+4. [API Documentation](#api-documentation)
+    - [User Routes](#user-routes)
+    - [Post Routes](#post-routes)
+5. [Follow and Unfollow](#follow-and-unfollow)
 
-How follow and un-follow working  
-user 1 -> follower 0 following 1  
-user 2 -> follower 1 following 0  
+## Project Description
 
-follow -> user 1 logged in and follow user 2  
+This project is a backend API that mimics the functionality of Twitter. It supports user authentication, post creation, liking, commenting, and following/unfollowing users.
 
-### ROUTES ->
+## Features
 
-/signup -> Public route -> basic need  
-{  
-"userName": "John Doe",  
-"email": "john.doe@example.com",  
-"password": "12345678"  
-}  <br/>  
+- User authentication (signup, login, logout)
+- User profile management
+- Post creation, deletion, liking, and commenting
+- Follow and unfollow users
+- Pagination for posts
 
-/login -> Public route -> basic need 
-{    
-"email": "john.doe@example.com",  
-"password": "12345678"  
-}  
-<b>If the user login successfully it get JWT which get as a response save in the header and then go inside</b>
-<br/>  
-/update -> req.body data what to be updated  
-<br/> 
-logout -> If the user is login and verified the it get logout  
-<br/> 
-/createpost -> {  
-    type 1 -> Title and description <b>Needed</b>  
-    type 2 -> All upper with a image  
-}   
-<br/> 
-/profilePosts -> req.query.id ie ~ profilePosts?id=someId -> This give the user all posts used for profile view stuff  
-<br>
-allPosts -> http://localhost:8080/api/v1/users/allPosts?page=2&limit=3  <br> 
-Give all posts till now with pagination and limit  
+## Setup and Installation
 
-removePost -> Delete post from DB, Cloudinary, User Post[]
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/your-username/twitter-backend-clone.git
+    cd twitter-backend-clone
+    ```
+
+2. Install dependencies:
+    ```bash
+    npm install
+    ```
+
+3. Set up environment variables:
+    Create a `.env` file in the root directory and add the following:
+    ```
+    PORT=8080
+    MONGODB_URI=your_mongodb_uri
+    JWT_SECRET=your_jwt_secret
+    CLOUDINARY_NAME=your_cloudinary_name
+    CLOUDINARY_API_KEY=your_cloudinary_api_key
+    CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+    ```
+
+4. Start the server:
+    ```bash
+    npm start
+    ```
+
+## API Documentation
+
+Base URL: `https://backendwithnodeprep-1.onrender.com/api/v1`
+
+### User Routes
+
+Base URL: `/users`
+
+- **Signup**
+    - **POST /signup**
+    - Request Body:
+        ```json
+        {
+            "userName": "John Doe",
+            "email": "john.doe@example.com",
+            "password": "12345678"
+        }
+        ```
+- **Login**
+    - **POST /login**
+    - Request Body:
+        ```json
+        {
+            "email": "john.doe@example.com",
+            "password": "12345678"
+        }
+        ```
+    - If login is successful, a JWT token is returned in the response header.
+
+- **Update User**
+    - **POST /update**
+    - Request Body: Contains the fields to be updated.
+- **Logout**
+    - **GET /logout**
+- **Get Profile**
+    - **GET /getProfile**
+
+### Post Routes
+
+Base URL: `/posts`
+
+- **Create Post**
+    - **POST /createPost**
+    - Request Body (Type 1):
+        ```json
+        {
+            "title": "Post Title",
+            "description": "Post Description"
+        }
+        ```
+    - Request Body (Type 2):
+        ```json
+        {
+            "title": "Post Title",
+            "description": "Post Description",
+            "image": "image_url"
+        }
+        ```
+
+- **Profile Posts**
+    - **GET /profilePosts**
+    - Query Parameter: `id` (e.g., `/profilePosts?id=someId`)
+
+- **All Posts**
+    - **GET /allPosts**
+    - Query Parameters: `page`, `limit` (e.g., `/allPosts?page=2&limit=3`)
+
+- **Remove Post**
+    - **POST /removePost**
+    - Request Body:
+        ```json
+        {
+            "postId": "post_id"
+        }
+        ```
+
+- **Like Post**
+    - **POST /likePost**
+    - Request Body:
+        ```json
+        {
+            "postId": "post_id"
+        }
+        ```
+
+- **Unlike Post**
+    - **POST /unlikePost**
+    - Request Body:
+        ```json
+        {
+            "postId": "post_id"
+        }
+        ```
+
+- **Comment Post**
+    - **POST /commentPost**
+    - Request Body:
+        ```json
+        {
+            "postId": "post_id",
+            "comment": "Your comment here"
+        }
+        ```
+
+## Follow and Unfollow
+
+### Follow User
+
+When User 1 (who is logged in) follows User 2:
+- User 1's `following` count is incremented.
+- User 2's `follower` count is incremented.
+
+### Unfollow User
+
+When User 1 (who is logged in) unfollows User 2:
+- User 1's `following` count is decremented.
+- User 2's `follower` count is decremented.
+
+### Example Scenario
+
+- **Initial State:**
+    - User 1 -> followers: 0, following: 1
+    - User 2 -> followers: 1, following: 0
+
+- **After Follow:**
+    - User 1 follows User 2:
+        - User 1 -> followers: 0, following: 1
+        - User 2 -> followers: 1, following: 0
+
+---
+
+This is a basic overview and setup guide for your Twitter backend clone. Feel free to expand on this by adding more details or additional features as your project evolves.
