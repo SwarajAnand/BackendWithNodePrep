@@ -251,7 +251,7 @@ const unFollowUser = async (req, res) => {
 
     const loggedInUser = await userModule.findOne({ _id: currUser });
 
-    if (loggedInUser.following.includes(visitedUser)) {
+    if (loggedInUser.followers.includes(visitedUser)) {
       return res.status(400).json(
         new ApiError(400, "You are not following this user", ["Error unFollow user"]),
       );
