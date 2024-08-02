@@ -1,4 +1,5 @@
 const userRoutes = require("express").Router();
+const upload = require("../middlewares/uploadFile.js");
 const {
   signup,
   login,
@@ -12,7 +13,7 @@ const authMiddleware = require("../middlewares/authMiddleware.js");
 
 userRoutes.post("/signup", signup);
 userRoutes.post("/login", login);
-userRoutes.post("/update", authMiddleware, updateUser);
+userRoutes.post("/update", upload.single('avatar'), authMiddleware, updateUser);
 userRoutes.get("/logout", authMiddleware, logout);
 userRoutes.get("/getProfile", authMiddleware, getProfile);
 
