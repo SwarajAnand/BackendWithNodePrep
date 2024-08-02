@@ -114,10 +114,10 @@ const logout = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    // const user = await userModule.findById(req.user.userId);
+    const user = await userModule.findById(req.user.userId);
 
-    const { bio, website, location, birthdate } = req.body;
-    const updateData = { bio, website, location, birthdate };
+    const { bio, website, location } = req.body;
+    const updateData = { bio, website, location };
 
     if (!user) {
       return res.status(404).json(
