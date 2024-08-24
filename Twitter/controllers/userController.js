@@ -257,15 +257,15 @@ const unFollowUser = async (req, res) => {
       );
     }
 
-    const updatedUser = await userModule.findOneAndUpdate(
+    await userModule.findOneAndUpdate(
       { _id: currUser },
-      { $pull: { followers: visitedUser } },
+      { $pull: { following: visitedUser } },
       { new: true }
     );
 
     await userModule.findOneAndUpdate(
       { _id: visitedUser },
-      { $pull: { following: currUser } },
+      { $pull: { followers: currUser } },
       { new: true }
     );
 
