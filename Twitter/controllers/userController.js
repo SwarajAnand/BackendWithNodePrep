@@ -198,6 +198,11 @@ const getProfile = async (req, res) => {
 };
 
 
+const searchUser = async (req, res) => {
+  const userList = await userModule.find({ userName: { $regex: req.query.userName } });
+  res.status(200).json({ success: true, message: "Search User", data: userList });
+}
+
 const followUser = async (req, res) => {
   try {
     const visitedUser = req?.query?.id || req?.body?.id;
@@ -361,7 +366,8 @@ const userController = {
   updateUser,
   getProfile,
   followUser,
-  unFollowUser
+  unFollowUser,
+  searchUser
 };
 
 module.exports = userController;
